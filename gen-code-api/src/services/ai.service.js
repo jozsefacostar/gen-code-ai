@@ -11,33 +11,21 @@ const client = new OpenAI({
 
 export const generateCode = async (instruction, context) => {
 
-  const systemPrompt = `
-  You are a senior software engineer.
-  Generate clean, production-ready code.
-  Follow SOLID principles.
-  Return only code without explanations.
-  `;
+  const response = await client.responses.create({
+    model: "meta-llama/llama-3.1-8b-instruct:free",
+    input: `
+          You are a senior software engineer.
+          Generate clean production-ready code.
+          Return ONLY code.
 
-  const response = await client.chat.completions.create({
-    model: "deepseek/deepseek-r1-0528-qwen3-8b:free",
-    messages: [
-      {
-        role: "system",
-        content: "You are an expert software engineer. Generate only code without explanation."
-      },
-      {
-        role: "user",
-        content: `
-Instruction:
-${instruction}
+          Instruction:
+          ${instruction}
 
-Code Context:
-${context}
+          Code Context:
+          ${context}
 `
-      }
-    ]
   });
 
-  return response.choices[0].message.content;
-
+  return response.output_text;
 };
+          
