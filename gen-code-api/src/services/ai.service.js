@@ -19,7 +19,7 @@ export const generateCode = async (instruction, context) => {
   `;
 
   const response = await client.chat.completions.create({
-    model: "mistralai/mistral-7b-instruct:free",
+    model: "deepseek/deepseek-r1:free",
     messages: [
       {
         role: "system",
