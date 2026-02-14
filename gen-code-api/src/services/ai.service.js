@@ -11,21 +11,26 @@ const client = new OpenAI({
 
 export const generateCode = async (instruction, context) => {
 
-  const response = await client.responses.create({
-    model: "openrouter/auto",
-    input: `
-You are a senior software engineer.
-Generate clean production-ready code.
-Return ONLY code.
-
+  const response = await client.chat.completions.create({
+    model: "gpt-4o-mini",
+    messages: [
+      {
+        role: "system",
+        content: "You are a senior software engineer. Generate only clean production-ready code."
+      },
+      {
+        role: "user",
+        content: `
 Instruction:
 ${instruction}
 
 Code Context:
 ${context}
 `
+      }
+    ]
   });
 
-  return response.output_text;
+  return response.choices[0].message.content;
 };
 
