@@ -9,7 +9,7 @@ const client = new OpenAI({
   }
 });
 
-async function generateCode(userPrompt, context) {
+export const generateCode = async (instruction, context) => {
 
   const systemPrompt = `
   You are a senior software engineer.
@@ -38,10 +38,6 @@ ${context}
     ]
   });
 
-
   return response.choices[0].message.content;
-}
 
-module.exports = {
-  generateCode
 };

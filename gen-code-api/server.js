@@ -1,8 +1,7 @@
-const express = require("express");
-const cors = require("cors");
-const OpenAI = require("openai");
-const { generateCode } = require("./src/services/ai.service");
-
+import express from "express";
+import cors from "cors";
+import OpenAI from "openai";
+import { generateCode } from "./src/services/ai.service.js";
 
 const app = express();
 
@@ -43,6 +42,8 @@ app.post("/generate", async (req, res) => {
 
 });
 
-app.listen(3000, () =>
-    console.log("happyCode API running on port 3000 🚀")
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () =>
+  console.log(`gen-code-ai API running on port ${PORT} 🚀`)
 );
