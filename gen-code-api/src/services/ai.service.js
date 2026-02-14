@@ -2,11 +2,7 @@ import OpenAI from "openai";
 
 const client = new OpenAI({
   apiKey: process.env.GITHUB_TOKEN,
-  baseURL: "https://openrouter.ai/api/v1",
-  defaultHeaders: {
-    "HTTP-Referer": "https://gen-code-ai.onrender.com",
-    "X-Title": "gen-code-ai"
-  }
+  baseURL: "https://models.inference.ai.azure.com"
 });
 
 export async function generateCode(prompt) {
