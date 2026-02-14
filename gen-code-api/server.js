@@ -1,6 +1,8 @@
 const express = require("express");
 const cors = require("cors");
 const OpenAI = require("openai");
+const { generateCode } = require("./src/services/ai.service");
+
 
 const app = express();
 
@@ -11,63 +13,32 @@ const openai = new OpenAI({
     apiKey: process.env.GITHUB_TOKEN
 });
 
-app.post("/generate-constructor", async (req, res) => {
+app.post("/generate", async (req, res) => {
 
-    const { code, filename } = req.body;
+  try {
 
-    try {
+    const { instruction, context } = req.body;
 
-        const response = await fetch(
-            "https://models.inference.ai.azure.com/chat/completions",
-            {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${process.env.GITHUB_TOKEN}`
-                },
-                body: JSON.stringify({
-                    model: "gpt-4.1",
-                    messages: [
-                        {
-                            role: "system",
-                            content: `
-You are a senior C# refactoring assistant.
-Generate a constructor using all properties.
-Return ONLY a unified diff patch.
-`
-                        },
-                        {
-                            role: "user",
-                            content: `
-File: ${filename}
+    if (!instruction)
+      return res.status(400).json({
+        error: "Instruction is required"
+      });
 
-${code}
-`
-                        }
-                    ]
-                })
-            }
-        );
+    const result = await generateCode(instruction, context);
 
-        const json = await response.json();
+    res.json({
+      code: result
+    });
 
-        res.json({
-            diff: json.choices[0].message.content
-        });
+  } catch (err) {
 
+    console.error(err);
 
-        res.json({
-            diff: response.choices[0].message.content
-        });
+    res.status(500).json({
+      error: "AI generation failed"
+    });
 
-    } catch (error) {
-
-        console.error(error);
-
-        res.status(500).json({
-            error: error.message
-        });
-    }
+  }
 
 });
 

@@ -3,77 +3,67 @@ import * as vscode from 'vscode';
 export function activate(context: vscode.ExtensionContext) {
 
   const disposable = vscode.commands.registerCommand(
-    'gen-code-ai.generateConstructor',
+    'gen-code-ai.generate',
     async () => {
 
       const editor = vscode.window.activeTextEditor;
       if (!editor) return;
 
-      const document = editor.document;
-      const code = document.getText();
+      const instruction = await vscode.window.showInputBox({
+        prompt: "¿Qué quieres que la IA genere?"
+      });
+
+      if (!instruction) return;
+
+      const selection = editor.selection;
+      const context = editor.document.getText(selection);
+
+      if (!context) {
+        vscode.window.showErrorMessage("Selecciona código primero");
+        return;
+      }
+
+      const config = vscode.workspace.getConfiguration("gen-code-ai");
+      const apiUrl = config.get<string>("gen-code-ai.apiUrl");
 
       const apiResponse = await fetch(
-        "http://localhost:3000/generate-constructor",
+        `${apiUrl}/generate`,
         {
           method: "POST",
           headers: {
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            code,
-            filename: document.fileName
+            instruction,
+            context
           })
         }
       );
 
-      const data = await apiResponse.json() as GenerateConstructorResponse;
+      const data = await apiResponse.json() as GenerateAIResponse;
 
-      console.log("happyCode backend response:", data);
-
-      if (!data.diff) {
-        vscode.window.showErrorMessage("Backend no devolvió diff 😢");
+      if (!data.code) {
+        vscode.window.showErrorMessage("Backend no devolvió código 😢");
         return;
       }
 
-      const diff = data.diff;
-
-
-
       const edit = new vscode.WorkspaceEdit();
 
-      const fullRange = new vscode.Range(
-        document.positionAt(0),
-        document.positionAt(code.length)
+      edit.replace(
+        editor.document.uri,
+        editor.selection,
+        data.code
       );
-
-      edit.replace(document.uri, fullRange, applyDiff(code, diff!));
 
       await vscode.workspace.applyEdit(edit);
 
-      vscode.window.showInformationMessage('Constructor generado por happyCode 🚀');
+      vscode.window.showInformationMessage('gen-code-ai-works! 🚀');
     }
   );
 
   context.subscriptions.push(disposable);
 }
 
-function applyDiff(original: string, diff: string): string {
-
-  const addedLines = diff
-    .split('\n')
-    .filter(l => l.startsWith('+') && !l.startsWith('+++'))
-    .map(l => l.substring(1));
-
-  const insertPoint = original.lastIndexOf('}');
-
-  return (
-    original.slice(0, insertPoint) +
-    '\n' +
-    addedLines.join('\n') +
-    '\n}'
-  );
-}
-
-interface GenerateConstructorResponse {
-  diff: string;
+interface GenerateAIResponse {
+  code: string;
 }

@@ -12,12 +12,16 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "gen-code-ai.generateConstructor",
-        "title": "Generate Constructor"
+    "configuration": {
+      "title": "gen-code-ai",
+      "properties": {
+        "gen-code-ai.apiUrl": {
+          "type": "string",
+          "default": "https://gen-code-ai.onrender.com",
+          "description": "AI Backend URL"
+        }
       }
-    ]
+    }
   },
   "scripts": {
     "vscode:prepublish": "npm run compile",
