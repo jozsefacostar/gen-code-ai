@@ -8,7 +8,7 @@ app.use(cors());
 app.use(express.json());
 
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY
+    apiKey: process.env.GITHUB_TOKEN
 });
 
 app.post("/generate-constructor", async (req, res) => {
