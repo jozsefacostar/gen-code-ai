@@ -17,32 +17,20 @@ console.log("BASE URL:", client.baseURL);
 
 app.post("/generate", async (req, res) => {
 
-  try {
+  const { prompt } = req.body;
 
-    const { instruction, context } = req.body;
-
-    if (!instruction)
-      return res.status(400).json({
-        error: "Instruction is required"
-      });
-
-    const result = await generateCode(instruction, context);
-
-    res.json({
-      code: result
+  if (!prompt) {
+    return res.status(400).json({
+      error: "Prompt is required"
     });
-
-  } catch (err) {
-
-    console.error(err);
-
-    res.status(500).json({
-      error: "AI generation failed"
-    });
-
   }
 
+  const result = await generateCode(prompt);
+
+  res.json(result);
+
 });
+
 
 const PORT = process.env.PORT || 3000;
 

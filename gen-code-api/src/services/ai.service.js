@@ -9,7 +9,7 @@ const client = new OpenAI({
   }
 });
 
-export const generateCode = async (instruction, context) => {
+export async function generateCode(prompt) {
 
   const response = await client.chat.completions.create({
     model: "gpt-4o-mini",
@@ -23,5 +23,4 @@ export const generateCode = async (instruction, context) => {
   });
 
   return response.choices[0].message.content;
-};
-
+}
