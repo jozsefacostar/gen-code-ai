@@ -1,7 +1,12 @@
-const OpenAI = require("openai");
+import OpenAI from "openai";
 
 const client = new OpenAI({
-  apiKey: process.env.GITHUB_TOKEN
+  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1",
+  defaultHeaders: {
+    "HTTP-Referer": "https://gen-code-ai.onrender.com",
+    "X-Title": "gen-code-ai"
+  }
 });
 
 async function generateCode(userPrompt, context) {
@@ -14,22 +19,25 @@ async function generateCode(userPrompt, context) {
   `;
 
   const response = await client.chat.completions.create({
-    model: "gpt-4o-mini",
+    model: "mistralai/mistral-7b-instruct:free",
     messages: [
       {
         role: "system",
-        content: systemPrompt
+        content: "You are an expert software engineer. Generate only code without explanation."
       },
       {
         role: "user",
         content: `
-        Instruction: ${userPrompt}
-        Context: ${context}
-        `
+Instruction:
+${instruction}
+
+Code Context:
+${context}
+`
       }
-    ],
-    temperature: 0.2
+    ]
   });
+
 
   return response.choices[0].message.content;
 }

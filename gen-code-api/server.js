@@ -10,7 +10,8 @@ app.use(cors());
 app.use(express.json());
 
 const openai = new OpenAI({
-    apiKey: process.env.GITHUB_TOKEN
+   apiKey: process.env.OPENAI_API_KEY,
+  baseURL: "https://openrouter.ai/api/v1"
 });
 
 app.post("/generate", async (req, res) => {
