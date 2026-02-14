@@ -19,7 +19,7 @@ export const generateCode = async (instruction, context) => {
   `;
 
   const response = await client.chat.completions.create({
-    model: "deepseek/deepseek-r1:free",
+    model: "qwen/qwen3-coder-480b-a35b:free",
     messages: [
       {
         role: "system",
