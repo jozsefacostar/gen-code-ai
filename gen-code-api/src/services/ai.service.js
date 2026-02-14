@@ -15,20 +15,11 @@ export const generateCode = async (instruction, context) => {
     model: "gpt-4o-mini",
     messages: [
       {
-        role: "system",
-        content: "You are a senior software engineer. Generate only clean production-ready code."
-      },
-      {
         role: "user",
-        content: `
-Instruction:
-${instruction}
-
-Code Context:
-${context}
-`
+        content: prompt
       }
-    ]
+    ],
+    temperature: 0.2
   });
 
   return response.choices[0].message.content;

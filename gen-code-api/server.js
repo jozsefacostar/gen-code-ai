@@ -12,6 +12,9 @@ const client = new OpenAI({
   apiKey: process.env.GITHUB_TOKEN,
   baseURL: "https://models.inference.ai.azure.com"
 });
+
+console.log("BASE URL:", client.baseURL);
+
 app.post("/generate", async (req, res) => {
 
   try {
