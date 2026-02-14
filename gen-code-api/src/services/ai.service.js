@@ -12,20 +12,20 @@ const client = new OpenAI({
 export const generateCode = async (instruction, context) => {
 
   const response = await client.responses.create({
-    model: "meta-llama/llama-3.1-8b-instruct:free",
+    model: "openrouter/auto",
     input: `
-          You are a senior software engineer.
-          Generate clean production-ready code.
-          Return ONLY code.
+You are a senior software engineer.
+Generate clean production-ready code.
+Return ONLY code.
 
-          Instruction:
-          ${instruction}
+Instruction:
+${instruction}
 
-          Code Context:
-          ${context}
+Code Context:
+${context}
 `
   });
 
   return response.output_text;
 };
-          
+
