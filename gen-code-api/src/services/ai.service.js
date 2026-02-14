@@ -1,7 +1,7 @@
 const OpenAI = require("openai");
 
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY
+  apiKey: process.env.GITHUB_TOKEN
 });
 
 async function generateCode(userPrompt, context) {
