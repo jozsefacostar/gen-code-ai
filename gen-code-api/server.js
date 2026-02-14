@@ -27,10 +27,11 @@ app.post("/generate", async (req, res) => {
 
   const result = await generateCode(prompt);
 
-  res.json(result);
+  res.json({
+    code: result
+  });
 
 });
-
 
 const PORT = process.env.PORT || 3000;
 
