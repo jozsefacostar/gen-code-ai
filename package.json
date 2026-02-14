@@ -12,6 +12,12 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
+    "commands": [
+      {
+        "command": "gen-code-ai.generate",
+        "title": "Gen Code AI: Generate"
+      }
+    ],
     "configuration": {
       "title": "gen-code-ai",
       "properties": {
