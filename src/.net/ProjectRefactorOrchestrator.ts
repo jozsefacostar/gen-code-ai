@@ -14,27 +14,42 @@ export class ProjectRefactorOrchestrator {
         const files = await ProjectFileReader.readAllCsFiles();
 
         const prompt = `
-Proyecto completo .NET:
+        Estás modificando un proyecto completo de consola en .NET.
 
-${files.map(f => `
-Archivo: ${f.path}
-${f.content}
-`).join('\n\n')}
+        A continuación se listan TODOS los archivos del proyecto:
 
-Instrucción:
-${instruction}
+        ${files.map(f => `
+        Archivo: ${f.path}
+        ${f.content}
+        `).join('\n\n')}
 
-Devuelve únicamente JSON:
+        Realiza la siguiente instrucción sobre TODO el proyecto:
 
-{
-  "changes":[
-    {
-      "file":"ruta absoluta",
-      "code":"contenido completo"
-    }
-  ]
-}
-`;
+        ${instruction}
+
+        Devuelve ÚNICAMENTE JSON con esta estructura:
+
+        {
+        "changes":[
+            {
+            "file":"ruta_relativa_desde_root",
+            "code":"contenido_completo"
+            }
+        ]
+        }
+
+        REGLAS OBLIGATORIAS:
+        - Devuelve rutas RELATIVAS al root del proyecto.
+        - NO uses rutas absolutas como C:\\ o /home/.
+        - Ejemplos válidos:
+            Program.cs
+            Services/ProductService.cs
+            Models/User.cs
+        - Si el archivo no existe, será creado.
+        - NO incluyas explicaciones.
+        - NO incluyas markdown.
+        - SOLO devuelve el JSON.
+        `;
 
         const confirmation = await vscode.window.showWarningMessage(
             "La IA va a modificar TODO el proyecto .NET",
