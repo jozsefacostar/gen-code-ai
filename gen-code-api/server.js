@@ -13,8 +13,6 @@ const client = new OpenAI({
   baseURL: "https://models.inference.ai.azure.com"
 });
 
-console.log("BASE URL:", client.baseURL);
-
 app.post("/generate", async (req, res) => {
 
   const { prompt } = req.body;

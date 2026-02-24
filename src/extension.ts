@@ -1,4 +1,5 @@
 import * as vscode from 'vscode';
+import { ProjectRefactorOrchestrator } from './.net/ProjectRefactorOrchestrator';
 
 export function activate(context: vscode.ExtensionContext) {
 
@@ -26,17 +27,13 @@ export function activate(context: vscode.ExtensionContext) {
       const config = vscode.workspace.getConfiguration("gen-code-ai");
       const apiUrl = config.get<string>("apiUrl");
 
-      // 🔥 ARMAS EL PROMPT AQUÍ
       const prompt = `
-Tienes el siguiente código:
-
-${selectedCode}
-
-Realiza la siguiente instrucción:
-${instruction}
-
-Devuelve únicamente el código resultante.
-`;
+      Tienes el siguiente código:
+      ${selectedCode}
+      Realiza la siguiente instrucción:
+      ${instruction}
+      Devuelve únicamente el código resultante.
+      `;
 
       const apiResponse = await fetch(`${apiUrl}/generate`, {
         method: "POST",
@@ -64,6 +61,24 @@ Devuelve únicamente el código resultante.
   );
 
   context.subscriptions.push(disposable);
+
+
+  const disposableProject = vscode.commands.registerCommand(
+    'gen-code-ai.refactorProject',
+    async () => {
+
+      const instruction = await vscode.window.showInputBox({
+        prompt: "¿Qué quieres refactorizar en TODO el proyecto?"
+      });
+
+      if (!instruction) return;
+
+      await ProjectRefactorOrchestrator.run(instruction);
+    }
+  );
+
+  context.subscriptions.push(disposableProject);
+
 }
 
 

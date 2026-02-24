@@ -16,6 +16,10 @@
       {
         "command": "gen-code-ai.generate",
         "title": "Gen Code AI: Generate"
+      },
+      {
+        "command": "gen-code-ai.refactorProject",
+        "title": "Gen Code AI: Refactor code"
       }
     ],
     "configuration": {
