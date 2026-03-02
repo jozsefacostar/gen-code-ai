@@ -12,23 +12,30 @@
   "activationEvents": [],
   "main": "./out/extension.js",
   "contributes": {
-    "commands": [
-      {
-        "command": "gen-code-ai.generate",
-        "title": "Gen Code AI: Generate"
-      },
-      {
-        "command": "gen-code-ai.refactorProject",
-        "title": "Gen Code AI: Refactor code"
-      }
-    ],
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "genCodeAI",
+          "title": "Gen Code AI",
+          "icon": "resources/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "genCodeAI": [
+        {
+          "id": "genCodeAI.sidebar",
+          "name": "AI Assistant"
+        }
+      ]
+    },
     "configuration": {
-      "title": "gen-code-ai",
+      "title": "Gen Code AI",
       "properties": {
         "gen-code-ai.apiUrl": {
           "type": "string",
           "default": "https://gen-code-ai.onrender.com",
-          "description": "AI Backend URL"
+          "description": "Backend API URL"
         }
       }
     }
